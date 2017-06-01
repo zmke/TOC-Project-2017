@@ -1,3 +1,4 @@
+# encoding: utf-8
 import sys
 from io import BytesIO
 
@@ -6,36 +7,139 @@ from flask import Flask, request, send_file
 
 from fsm import TocMachine
 
+first = 0
 
-API_TOKEN = 'Your Telegram API Token'
-WEBHOOK_URL = 'Your Webhook URL'
+API_TOKEN = '387203602:AAEU7r1xS2Wpl4StrRX9G0vtDbc16q0U8Z8'
+WEBHOOK_URL = 'https://e72af5c3.ngrok.io/hook'
 
 app = Flask(__name__)
 bot = telegram.Bot(token=API_TOKEN)
 machine = TocMachine(
     states=[
         'user',
-        'state1',
-        'state2'
+        'start',
+        'shoulder',
+        'upper',
+        'lower',
+        's_1',
+        's_2',
+        's_2_1',
+        's_2_2',
+        's_3',
+        'u_1',
+        'u_2',
+        'u_3',
+        'l_1',
+        'l_2',
+        'l_3'
     ],
     transitions=[
         {
             'trigger': 'advance',
             'source': 'user',
-            'dest': 'state1',
-            'conditions': 'is_going_to_state1'
+            'dest': 'start',
+            'conditions': 'start_chosen'
         },
         {
             'trigger': 'advance',
             'source': 'user',
-            'dest': 'state2',
-            'conditions': 'is_going_to_state2'
+            'dest': 'shoulder',
+            'conditions': 'shoulder_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'upper',
+            'conditions': 'upper_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'lower',
+            'conditions': 'lower_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'shoulder',
+            'dest': 's_1',
+            'conditions': 's_1_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'shoulder',
+            'dest': 's_2',
+            'conditions': 's_2_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 's_2',
+            'dest': 's_2_1',
+            'conditions': 's_2_1_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 's_2',
+            'dest': 's_2_2',
+            'conditions': 's_2_2_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'shoulder',
+            'dest': 's_3',
+            'conditions': 's_3_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'upper',
+            'dest': 'u_1',
+            'conditions': 'u_1_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'upper',
+            'dest': 'u_2',
+            'conditions': 'u_2_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'upper',
+            'dest': 'u_3',
+            'conditions': 'u_3_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'lower',
+            'dest': 'l_1',
+            'conditions': 'l_1_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'lower',
+            'dest': 'l_2',
+            'conditions': 'l_2_chosen'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'lower',
+            'dest': 'l_3',
+            'conditions': 'l_3_chosen'
         },
         {
             'trigger': 'go_back',
             'source': [
-                'state1',
-                'state2'
+                'start',
+                's_1',
+                's_2_1',
+                's_2_2',
+                's_3',
+                'u_1',
+                'u_2',
+                'u_3',
+                'l_1',
+                'l_2',
+                'l_3',
+                'upper',
+                'lower'
             ],
             'dest': 'user'
         }
@@ -59,6 +163,9 @@ def _set_webhook():
 def webhook_handler():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
     machine.advance(update)
+    global first
+    if first == 0:
+        first = 1
     return 'ok'
 
 

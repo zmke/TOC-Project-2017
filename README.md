@@ -1,8 +1,7 @@
 # TOC Project 2017
 
-Template Code for TOC Project 2017
-
-A telegram bot based on a finite state machine
+* A telegram bot based on a finite state machine
+* Help people to stretch their muscle
 
 ## Setup
 
@@ -45,17 +44,11 @@ python3 app.py
 ![fsm](./img/show-fsm.png)
 
 ## Usage
-The initial state is set to `user`.
+* The initial state is set to `user`.
+Input `/start` to wake the bot, and it will list acceptable inputs. 
 
-Every time `user` state is triggered to `advance` to another state, it will `go_back` to `user` state after the bot replies corresponding message.
+* The user will be asked to choose a part of his body, then choose the proper muscle. The bot will reply how to stretch the muscle.
 
-* user
-	* Input: "go to state1"
-		* Reply: "I'm entering state1"
-
-	* Input: "go to state2"
-		* Reply: "I'm entering state2"
-
-
+* The knowledge of stretching is from NCKU PAIN FREE FOR LIFE COURSE
 ## Author
-[Lee-W](https://github.com/Lee-W)
+[zmke](https://github.com/zmke)
